@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -203,15 +204,13 @@ public class MovieDetailActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.detail_movie_menu, menu);
 
-
-
-//        for(int i = 0; i < menu.size(); i++){
-//            Drawable drawable = menu.getItem(i).getIcon();
-//            if(drawable != null) {
-//                drawable.mutate();
-//                drawable.setColorFilter(getResources().getColor(R.color.textColorPrimary), PorterDuff.Mode.SRC_ATOP);
-//            }
-//        }
+        if (getIntent().getSerializableExtra("movie") != null) {
+            Drawable drawable = menu.getItem(0).getIcon();
+            drawable.mutate();
+            drawable.setColorFilter(getResources().getColor(R.color.addedToFavoriteList), PorterDuff.Mode.SRC_ATOP);
+        } else {
+            // Check ID on DB to set action bar star color
+        }
 
         return true;
     }

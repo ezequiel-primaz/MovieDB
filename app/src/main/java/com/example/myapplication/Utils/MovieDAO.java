@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.example.myapplication.ui.models.Genre;
 import com.example.myapplication.ui.models.MovieDetail;
@@ -68,6 +69,9 @@ public class MovieDAO {
 
     public Cursor carregaDados(){
         Cursor cursor;
+
+        Log.e("Ezequiel", "DB loading movies");
+
         String[] campos =  {
             DBHelper.ID,
             DBHelper.DATA,
@@ -95,7 +99,7 @@ public class MovieDAO {
     private String getGenreNames(List<Genre> genres) {
         String list = "";
         for(Genre g : genres){
-            list = list.concat(g.name + "");
+            list = list.concat(g.name + " ");
         }
         return list.trim();
     }
@@ -103,7 +107,7 @@ public class MovieDAO {
     private String getGenreid(List<Genre> genres) {
         String list = "";
         for(Genre g : genres){
-            list = list.concat(g.id + "");
+            list = list.concat(g.id + " ");
         }
         return list.trim();
     }

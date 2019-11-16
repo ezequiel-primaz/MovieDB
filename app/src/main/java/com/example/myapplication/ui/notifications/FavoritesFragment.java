@@ -1,5 +1,6 @@
 package com.example.myapplication.ui.notifications;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -27,6 +28,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -34,13 +37,14 @@ import java.util.List;
 public class FavoritesFragment extends Fragment {
 
     private Cursor cursor = null;
+    private ListView moviesList;
     private MovieCursorAdapter adapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
         View root = inflater.inflate(R.layout.fragment_movies_list, container, false);
-        final ListView moviesList = root.findViewById(R.id.listMovies);
+        moviesList = root.findViewById(R.id.listMovies);
 
         adapter = new MovieCursorAdapter(getContext(), cursor);
         moviesList.setAdapter(adapter);
@@ -59,7 +63,13 @@ public class FavoritesFragment extends Fragment {
                 movie.vote_average = cursor.getFloat(cursor.getColumnIndex(DBHelper.VOTE_AVERAGE));
                 movie.vote_count = cursor.getInt(cursor.getColumnIndex(DBHelper.VOTE_COUNT));
                 movie.overview = cursor.getString(cursor.getColumnIndex(DBHelper.OVERVIEW));
-                movie.release_date = new Date(cursor.getString(cursor.getColumnIndex(DBHelper.DATA)));
+
+                try {
+                    movie.release_date = new SimpleDateFormat("yyyy-MM-dd").parse(cursor.getString(cursor.getColumnIndex(DBHelper.DATA)));
+                }catch(ParseException e){
+                    e.printStackTrace();
+                }
+
                 movie.revenue = cursor.getLong(cursor.getColumnIndex(DBHelper.REVENUE));
                 movie.genres = getGenresObject();
                 movie.runtime = cursor.getInt(cursor.getColumnIndex(DBHelper.RUNTIME));
