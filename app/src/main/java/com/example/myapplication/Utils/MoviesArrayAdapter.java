@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.Utils;
 
 import android.content.Context;
 import android.util.Log;
@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.example.myapplication.R;
 import com.example.myapplication.ui.models.Movie;
 import com.squareup.picasso.Picasso;
 

@@ -1,18 +1,25 @@
 package com.example.myapplication;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.myapplication.Utils.Constants;
+import com.example.myapplication.Utils.MovieDAO;
+import com.example.myapplication.Utils.Util;
 import com.example.myapplication.ui.models.Genre;
 import com.example.myapplication.ui.models.Movie;
 import com.example.myapplication.ui.models.MovieDetail;
@@ -41,11 +48,16 @@ public class MovieDetailActivity extends AppCompatActivity {
     RatingBar rtbStars;
     TextView txtVoteCount;
     TextView txtRuntime;
+    TextView txtRuntimeString;
     TextView txtReleaseDate;
+    TextView txtReleaseDateString;
     TextView txtRevenue;
     TextView txtRevenueString;
     TextView txtMovieGenre;
     TextView txtGenreString;
+    MovieDetail movieDetail = null;
+
+    ProgressDialog progress = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,27 +71,25 @@ public class MovieDetailActivity extends AppCompatActivity {
         rtbStars = findViewById(R.id.rtbMovie);
         txtVoteCount = findViewById(R.id.txtMovieVoteCount);
         txtRuntime = findViewById(R.id.txtMovieRuntime);
+        txtRuntimeString = findViewById(R.id.txtRuntimeString);
         txtReleaseDate = findViewById(R.id.txtMovieReleaseDate);
+        txtReleaseDateString = findViewById(R.id.txtReleaseDateString);
         txtRevenue = findViewById(R.id.txtMovieRevenue);
         txtRevenueString = findViewById(R.id.txtRevenueString);
         txtMovieGenre = findViewById(R.id.txtMovieGenre);
         txtGenreString = findViewById(R.id.txtGenreString);
-    }
 
-    @Override
-    public void onStart() {
-        super.onStart();
+        progress = new ProgressDialog(this);
+
         this.getMovieDetail();
     }
 
     private void getMovieDetail() {
 
-        final ProgressDialog progress = new ProgressDialog(this);
         progress.setTitle("Loading");
         progress.setMessage("Wait while loading...");
         progress.setCancelable(false); // disable dismiss by tapping outside of the dialog
         progress.show();
-// To dismiss the dialog
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(MovieDBService.BASE_URL)
@@ -89,6 +99,11 @@ public class MovieDetailActivity extends AppCompatActivity {
         MovieDBService service = retrofit.create(MovieDBService.class);
 
         Intent intent = getIntent();
+
+        if (intent.getSerializableExtra("movie") != null) {
+            movieDetail = (MovieDetail) intent.getSerializableExtra("movie");
+            setDetailsToView(movieDetail);
+        }
 
         int id = intent.getIntExtra("id", 0);
 
@@ -101,54 +116,10 @@ public class MovieDetailActivity extends AppCompatActivity {
                     Log.e("Ezequiel", "Erro: " + response.code());
                 } else {
                     Log.e("Ezequiel", "Setting response body");
-                    MovieDetail movieDetail = response.body();
+                    movieDetail = response.body();
 
-                    try{
-                        txtTitle.setText(movieDetail.title);
+                    setDetailsToView(movieDetail);
 
-                        if(movieDetail.tagline != null) {
-                            txtTagline.setText(movieDetail.tagline);
-                        } else {
-                            txtTagline.setVisibility(View.GONE);
-                        }
-
-                        if(movieDetail.overview != null) {
-                            txtOverview.setText(movieDetail.overview);
-                        } else {
-                            txtOverview.setVisibility(View.GONE);
-                        }
-
-                        Picasso.get().load("https://image.tmdb.org/t/p/w342" + movieDetail.poster_path).into(imgPoster);
-
-                        rtbStars.setVisibility(View.VISIBLE);
-                        rtbStars.setRating(movieDetail.vote_average/2);
-
-                        txtVoteCount.setText(Integer.toString(movieDetail.vote_count));
-                        txtRuntime.setText(getRuntime(movieDetail.runtime));
-
-                        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-                        txtReleaseDate.setText(df.format(movieDetail.release_date));
-
-                        if(movieDetail.revenue != 0){
-                            NumberFormat nf = NumberFormat.getCurrencyInstance(Locale.US);
-                            txtRevenue.setText(nf.format(movieDetail.revenue));
-                        } else {
-                            txtRevenue.setVisibility(View.GONE);
-                            txtRevenueString.setVisibility(View.GONE);
-                        }
-
-                        if(movieDetail.genres.size() > 0) {
-                            txtMovieGenre.setText(getGenres(movieDetail.genres));
-                        } else {
-                            txtGenreString.setVisibility(View.GONE);
-                            txtMovieGenre.setVisibility(View.GONE);
-                        }
-
-                        progress.dismiss();
-
-                    } catch(NullPointerException e){
-                        Log.e("Ezequiel", e.getMessage());
-                    }
                 }
             }
 
@@ -157,6 +128,63 @@ public class MovieDetailActivity extends AppCompatActivity {
                 Log.e("Ezequiel", "Erro: " + t.getMessage());
             }
         });
+    }
+
+    private void setDetailsToView(MovieDetail movieDetail) {
+        try{
+            txtTitle.setText(movieDetail.title);
+
+            if(movieDetail.tagline != null) {
+                txtTagline.setText(movieDetail.tagline);
+            } else {
+                txtTagline.setVisibility(View.GONE);
+            }
+
+            if(movieDetail.overview != null) {
+                txtOverview.setText(movieDetail.overview);
+            } else {
+                txtOverview.setVisibility(View.GONE);
+            }
+
+            Picasso.get().load("https://image.tmdb.org/t/p/w342" + movieDetail.poster_path).into(imgPoster);
+
+            rtbStars.setVisibility(View.VISIBLE);
+            rtbStars.setRating(movieDetail.vote_average/2);
+
+            txtVoteCount.setText(Integer.toString(movieDetail.vote_count));
+
+            if (movieDetail.runtime != null) {
+                txtRuntime.setText(getRuntime(movieDetail.runtime));
+                txtRuntimeString.setVisibility(View.VISIBLE);
+            }
+
+            if (movieDetail.release_date != null) {
+                txtReleaseDate.setText(Util.df.format(movieDetail.release_date));
+                txtReleaseDateString.setVisibility(View.VISIBLE);
+            }
+
+            if(movieDetail.revenue != 0){
+                NumberFormat nf = NumberFormat.getCurrencyInstance(Locale.US);
+                txtRevenue.setText(nf.format(movieDetail.revenue));
+                txtRevenueString.setVisibility(View.VISIBLE);
+            } else {
+                txtRevenue.setVisibility(View.GONE);
+                txtRevenueString.setVisibility(View.GONE);
+            }
+
+            if(movieDetail.genres.size() > 0) {
+                txtMovieGenre.setText(getGenres(movieDetail.genres));
+                txtGenreString.setVisibility(View.VISIBLE);
+            } else {
+                txtGenreString.setVisibility(View.GONE);
+                txtMovieGenre.setVisibility(View.GONE);
+            }
+
+            progress.dismiss();
+
+        } catch(NullPointerException e){
+            Log.e("Ezequiel", e.getMessage());
+        }
     }
 
     private String getGenres(List<Genre> genres) {
@@ -169,6 +197,40 @@ public class MovieDetailActivity extends AppCompatActivity {
 
     public String getRuntime(int runtime) {
         return runtime/60 + "hr " + runtime % 60 + "min";
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.detail_movie_menu, menu);
+
+
+
+//        for(int i = 0; i < menu.size(); i++){
+//            Drawable drawable = menu.getItem(i).getIcon();
+//            if(drawable != null) {
+//                drawable.mutate();
+//                drawable.setColorFilter(getResources().getColor(R.color.textColorPrimary), PorterDuff.Mode.SRC_ATOP);
+//            }
+//        }
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.addActionButton) {
+
+            MovieDAO db = new MovieDAO(getBaseContext());
+            String resultado = db.insereDado(movieDetail);
+
+            Toast.makeText(getApplicationContext(), resultado, Toast.LENGTH_LONG).show();
+
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
 }

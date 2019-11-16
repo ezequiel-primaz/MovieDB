@@ -15,7 +15,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.myapplication.MovieDBService;
 import com.example.myapplication.MovieDetailActivity;
-import com.example.myapplication.MoviesArrayAdapter;
+import com.example.myapplication.Utils.MoviesArrayAdapter;
 import com.example.myapplication.R;
 import com.example.myapplication.Utils.Constants;
 import com.example.myapplication.ui.models.Movie;
