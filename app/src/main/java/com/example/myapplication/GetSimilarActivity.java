@@ -36,6 +36,11 @@ public class GetSimilarActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        assert getSupportActionBar() != null;   //null check
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);   //show back button
+
+        setTitle(getResources().getString(R.string.movies_similar_to) + " " + getIntent().getStringExtra("title"));
         setContentView(R.layout.fragment_movies_list);
 
         this.getMovies(0);
@@ -115,5 +120,11 @@ public class GetSimilarActivity extends AppCompatActivity {
                 Log.e("Ezequiel", "Erro: " + t.getMessage());
             }
         });
+    }
+
+    @Override
+    public boolean onSupportNavigateUp(){
+        finish();
+        return true;
     }
 }

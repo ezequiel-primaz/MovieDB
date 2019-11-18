@@ -9,4 +9,5 @@
     <string name="revenue_string">Revenue:</string>
     <string name="genre_string">Genre:</string>
     <string name="similar_movies_btn">Check Similar Movies</string>
+    <string name="movies_similar_to">Similar to: </string>
 </resources>

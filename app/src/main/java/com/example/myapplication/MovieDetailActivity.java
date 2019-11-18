@@ -68,6 +68,9 @@ public class MovieDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
 
+        assert getSupportActionBar() != null;   //null check
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);   //show back button
+
         txtTitle = findViewById(R.id.txtMovieTitle);
         txtTagline = findViewById(R.id.txtMovieTagline);
         txtOverview = findViewById(R.id.txtMovieOverview);
@@ -93,6 +96,7 @@ public class MovieDetailActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), GetSimilarActivity.class);
                 intent.putExtra("id", movieDetail.id);
+                intent.putExtra("title", movieDetail.title);
                 startActivity(intent);
             }
         });
@@ -266,5 +270,11 @@ public class MovieDetailActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp(){
+        finish();
+        return true;
     }
 }
