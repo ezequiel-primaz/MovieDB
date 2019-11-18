@@ -96,6 +96,41 @@ public class MovieDAO {
         return cursor;
     }
 
+    public boolean hasFavorite(int id){
+        Cursor cursor;
+
+        String where = DBHelper.ID + "=" + id;
+
+        String[] campos =  {
+                DBHelper.ID,
+                DBHelper.TITLE
+        };
+        db = banco.getReadableDatabase();
+        cursor = db.query(DBHelper.TABELA, campos, where, null, null, null, null, null);
+
+        if(cursor!=null){
+            if(cursor.getCount() > 0){
+                db.close();
+                return true;
+            }
+        }
+        db.close();
+        return false;
+    }
+
+    public String deletaRegistro(int id){
+        long resultado;
+        String where = DBHelper.ID + "=" + id;
+        db = banco.getReadableDatabase();
+        resultado = db.delete(DBHelper.TABELA,where,null);
+        db.close();
+
+        if (resultado == -1)
+            return "Erro ao deletar dados!";
+        else
+            return "Dados deletados com sucesso!";
+    }
+
     private String getGenreNames(List<Genre> genres) {
         String list = "";
         for(Genre g : genres){

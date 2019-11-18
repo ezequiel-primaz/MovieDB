@@ -57,6 +57,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     TextView txtMovieGenre;
     TextView txtGenreString;
     MovieDetail movieDetail = null;
+    boolean favorite = false;
 
     ProgressDialog progress = null;
 
@@ -203,13 +204,28 @@ public class MovieDetailActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.detail_movie_menu, menu);
+        Drawable drawable = menu.getItem(0).getIcon();
+        drawable.mutate();
+        MovieDAO db = new MovieDAO(getApplicationContext());
 
         if (getIntent().getSerializableExtra("movie") != null) {
-            Drawable drawable = menu.getItem(0).getIcon();
-            drawable.mutate();
-            drawable.setColorFilter(getResources().getColor(R.color.addedToFavoriteList), PorterDuff.Mode.SRC_ATOP);
+
+            MovieDetail md = (MovieDetail) getIntent().getSerializableExtra("movie");
+
+            favorite = db.hasFavorite(md.id);
+            if (favorite) {
+                drawable.setColorFilter(getResources().getColor(R.color.addedToFavoriteList), PorterDuff.Mode.SRC_ATOP);
+            } else {
+                drawable.setColorFilter(getResources().getColor(R.color.addToFavoriteList), PorterDuff.Mode.SRC_ATOP);
+            }
+
         } else {
-            // Check ID on DB to set action bar star color
+            favorite = db.hasFavorite(getIntent().getIntExtra("id", 0));
+            if (favorite) {
+                drawable.setColorFilter(getResources().getColor(R.color.addedToFavoriteList), PorterDuff.Mode.SRC_ATOP);
+            } else {
+                drawable.setColorFilter(getResources().getColor(R.color.addToFavoriteList), PorterDuff.Mode.SRC_ATOP);
+            }
         }
 
         return true;
@@ -221,15 +237,24 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         if (id == R.id.addActionButton) {
 
-            MovieDAO db = new MovieDAO(getBaseContext());
-            String resultado = db.insereDado(movieDetail);
+            if(!favorite){
+                MovieDAO db = new MovieDAO(getBaseContext());
+                String resultado = db.insereDado(movieDetail);
 
-            Toast.makeText(getApplicationContext(), resultado, Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), resultado, Toast.LENGTH_LONG).show();
+            } else {
+                MovieDAO db = new MovieDAO(getBaseContext());
+                String resultado = db.deletaRegistro(movieDetail.id);
+
+                Toast.makeText(getApplicationContext(), resultado, Toast.LENGTH_LONG).show();
+            }
+
+            finish();
+            startActivity(getIntent());
 
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
-
 }
