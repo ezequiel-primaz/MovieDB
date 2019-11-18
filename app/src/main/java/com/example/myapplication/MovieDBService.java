@@ -15,10 +15,12 @@ public interface MovieDBService {
     @GET("movie/top_rated")
     Call<MoviesCatalog> listTopRatedMovies(@Query("page") int page, @Query("api_key") String api_key, @Query("language") String language);
 
+    @GET("movie/{id}/similar")
+    Call<MoviesCatalog> similarMovies(@Path("id") int id, @Query("api_key") String api_key, @Query("language") String language, @Query("page") int page);
+
     @GET("movie/popular")
     Call<MoviesCatalog> listPopularMovies(@Query("page") int page, @Query("api_key") String api_key, @Query("language") String language);
 
     @GET("movie/{id}")
     Call<MovieDetail> getMovieDetail(@Path("id") int id, @Query("api_key") String api_key, @Query("language") String language);
-
 }

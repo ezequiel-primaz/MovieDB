@@ -46,6 +46,7 @@
         android:id="@+id/imgMoviePoster"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:contentDescription="@string/img_description"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -76,7 +77,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:text="Runtime:"
+        android:text="@string/runtime_string"
         android:textColor="@android:color/black"
         app:layout_constraintStart_toEndOf="@+id/imgMoviePoster"
         app:layout_constraintTop_toTopOf="@+id/imgMoviePoster"
@@ -97,7 +98,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Release Date:"
+        android:text="@string/release_date_string"
         android:textColor="@android:color/black"
         app:layout_constraintStart_toStartOf="@+id/txtRuntimeString"
         app:layout_constraintTop_toBottomOf="@+id/txtRuntimeString"
@@ -118,7 +119,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Revenue:"
+        android:text="@string/revenue_string"
         android:textColor="@android:color/black"
         app:layout_constraintStart_toStartOf="@+id/txtReleaseDateString"
         app:layout_constraintTop_toBottomOf="@+id/txtReleaseDateString"
@@ -139,7 +140,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Genre:"
+        android:text="@string/genre_string"
         android:textColor="@android:color/black"
         app:layout_constraintStart_toStartOf="@+id/txtRevenueString"
         app:layout_constraintTop_toBottomOf="@+id/txtRevenueString"
@@ -154,5 +155,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/txtGenreString"
         app:layout_constraintTop_toTopOf="@+id/txtGenreString" />
+
+    <Button
+        android:id="@+id/btnSimilar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/similar_movies_btn"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

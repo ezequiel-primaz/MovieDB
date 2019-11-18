@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RatingBar;
@@ -57,6 +58,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     TextView txtMovieGenre;
     TextView txtGenreString;
     MovieDetail movieDetail = null;
+    Button btnSimilar;
     boolean favorite = false;
 
     ProgressDialog progress = null;
@@ -80,10 +82,20 @@ public class MovieDetailActivity extends AppCompatActivity {
         txtRevenueString = findViewById(R.id.txtRevenueString);
         txtMovieGenre = findViewById(R.id.txtMovieGenre);
         txtGenreString = findViewById(R.id.txtGenreString);
+        btnSimilar = findViewById(R.id.btnSimilar);
 
         progress = new ProgressDialog(this);
 
         this.getMovieDetail();
+
+        btnSimilar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), GetSimilarActivity.class);
+                intent.putExtra("id", movieDetail.id);
+                startActivity(intent);
+            }
+        });
     }
 
     private void getMovieDetail() {
@@ -119,9 +131,7 @@ public class MovieDetailActivity extends AppCompatActivity {
                 } else {
                     Log.e("Ezequiel", "Setting response body");
                     movieDetail = response.body();
-
                     setDetailsToView(movieDetail);
-
                 }
             }
 

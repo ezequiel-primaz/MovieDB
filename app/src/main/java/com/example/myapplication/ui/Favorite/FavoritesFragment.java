@@ -1,13 +1,11 @@
-package com.example.myapplication.ui.notifications;
+package com.example.myapplication.ui.Favorite;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
@@ -18,20 +16,13 @@ import com.example.myapplication.MovieDetailActivity;
 import com.example.myapplication.Utils.DBHelper;
 import com.example.myapplication.Utils.MovieCursorAdapter;
 import com.example.myapplication.Utils.MovieDAO;
-import com.example.myapplication.Utils.MoviesArrayAdapter;
 import com.example.myapplication.R;
-import com.example.myapplication.Utils.Util;
 import com.example.myapplication.ui.models.Genre;
 import com.example.myapplication.ui.models.MovieDetail;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class FavoritesFragment extends Fragment {
